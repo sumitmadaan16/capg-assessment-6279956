@@ -12,6 +12,5 @@ test("qspider", async({page})=>{
     await page.getByLabel("Password").fill("student123")
     await page.getByRole("button", {name:"Login"}).click()
 
-    let date_and_time=new Date().getTime()
     await expect(page).toHaveScreenshot();
 })
