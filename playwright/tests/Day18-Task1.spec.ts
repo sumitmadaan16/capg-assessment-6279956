@@ -25,32 +25,32 @@ test("Register Multiple users using excel",async({browser})=>{
         let dobValue = sheet!.getRow(i).getCell(7).value;
         let dob: Date;
         if (dobValue instanceof Date) {
-        dob = dobValue;
+            dob = dobValue;
         } else if (typeof dobValue === "string") {
-        let [day, month, year] = dobValue.split("/");
-        dob = new Date(Number(year), Number(month) - 1, Number(day));
+            let [day, month, year] = dobValue.split("/")
+            dob = new Date(Number(year), Number(month) - 1, Number(day))
         } else if (typeof dobValue === "number") {
-        dob = new Date(Math.round((dobValue - 25569) * 86400 * 1000));
+            dob = new Date(Math.round((dobValue - 25569) * 86400 * 1000))
         } else {
-        throw new Error("Unsupported DOB format: " + dobValue);
+            throw new Error("Unsupported DOB format: " + dobValue)
         }
-        let year = dob.getFullYear().toString();
-        let month = dob.toLocaleString("default", { month: "long" });
-        let day = dob.getDate().toString();
+        let year = dob.getFullYear().toString()
+        let month = dob.toLocaleString("default", { month: "long" })
+        let day = dob.getDate().toString()
 
-        let subjects:string=sheet!.getRow(i).getCell(8).toString();
-        let hobbies:string=sheet!.getRow(i).getCell(9).toString();
-        let currentAddress:string=sheet!.getRow(i).getCell(10).toString();
-        let state:string=sheet!.getRow(i).getCell(11).toString();
-        let city:string=sheet!.getRow(i).getCell(12).toString();
+        let subjects:string=sheet!.getRow(i).getCell(8).toString()
+        let hobbies:string=sheet!.getRow(i).getCell(9).toString()
+        let currentAddress:string=sheet!.getRow(i).getCell(10).toString()
+        let state:string=sheet!.getRow(i).getCell(11).toString()
+        let city:string=sheet!.getRow(i).getCell(12).toString()
 
-        await page.goto(url!);
-        await page.getByPlaceholder("First Name").fill(firstName);
-        await page.getByPlaceholder("Last Name").fill(lastName);
-        await page.locator("#userEmail").fill(email);
+        await page.goto(url!)
+        await page.getByPlaceholder("First Name").fill(firstName)
+        await page.getByPlaceholder("Last Name").fill(lastName)
+        await page.locator("#userEmail").fill(email)
         await page.locator(`//label[text()='${gender}']`).click()
-        await page.getByPlaceholder("Mobile Number").fill(mobile);
-        await page.locator("#dateOfBirthInput").click();
+        await page.getByPlaceholder("Mobile Number").fill(mobile)
+        await page.locator("#dateOfBirthInput").click()
         await page.locator("//select[@class='react-datepicker__year-select']").selectOption(year);
         await page.locator("//select[@class='react-datepicker__month-select']").selectOption(month);
         await page.locator(`.react-datepicker__day--0${day}`).first().click();
