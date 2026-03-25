@@ -1,0 +1,12 @@
+{
+    "url" : "https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login",
+    "AccountNumber":{
+        "Ac1" : "1010",
+        "Ac2" : "1011",
+        "Ac3" : "1012"
+    },
+    "userName" : "",
+    "firstName" : "user1",
+    "lastName" :"last1",
+    "postalCode" : "1234"
+}
