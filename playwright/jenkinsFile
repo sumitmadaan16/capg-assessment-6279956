@@ -1,17 +1,33 @@
 pipeline {
     agent any
+    tools {
+        nodejs "node16"   // configure NodeJS in Jenkins Global Tool Configuration
+    }
+
     stages {
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
-                sh 'npx playwright install'
+                script {
+                    if (isUnix()) {
+                        sh 'npm install'
+                        sh 'npx playwright install'
+                    } else {
+                        bat 'npm install'
+                        bat 'npx playwright install'
+                    }
+                }
             }
         }
 
         stage('Run Tests') {
             steps {
                 script {
-                    def status = sh(script: 'npx playwright test', returnStatus: true)
+                    def status
+                    if (isUnix()) {
+                        status = sh(script: 'npx playwright test --reporter=html', returnStatus: true)
+                    } else {
+                        status = bat(script: 'npx playwright test --reporter=html', returnStatus: true)
+                    }
                     if (status != 0) {
                         echo "Tests failed, but continuing to generate reports..."
                     }
@@ -32,6 +48,9 @@ pipeline {
                 allowMissing: true,
                 linkRelative: false
             ])
+
+            // Archive raw artifacts (screenshots, test results)
+            archiveArtifacts artifacts: 'Screenshots/**, test-results/**', allowEmptyArchive: true
         }
     }
 }
