@@ -1,16 +1,22 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs "node16"   // must match the name you configured in Manage Jenkins → Tools
+    }
+
     stages {
         stage('Install Dependencies') {
             steps {
-                script {
-                    if (isUnix()) {
-                        sh 'cd playwright && npm install'
-                        sh 'cd playwright && npx playwright install'
-                    } else {
-                        bat 'cd playwright && npm install'
-                        bat 'cd playwright && npx playwright install'
+                nodejs(nodeJSInstallationName: 'node16') {
+                    script {
+                        if (isUnix()) {
+                            sh 'cd playwright && npm install'
+                            sh 'cd playwright && npx playwright install'
+                        } else {
+                            bat 'cd playwright && npm install'
+                            bat 'cd playwright && npx playwright install'
+                        }
                     }
                 }
             }
@@ -18,15 +24,17 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                script {
-                    def status
-                    if (isUnix()) {
-                        status = sh(script: 'cd playwright && npx playwright test --reporter=html', returnStatus: true)
-                    } else {
-                        status = bat(script: 'cd playwright && npx playwright test --reporter=html', returnStatus: true)
-                    }
-                    if (status != 0) {
-                        echo "Tests failed, but continuing to generate reports..."
+                nodejs(nodeJSInstallationName: 'node16') {
+                    script {
+                        def status
+                        if (isUnix()) {
+                            status = sh(script: 'cd playwright && npx playwright test --reporter=html', returnStatus: true)
+                        } else {
+                            status = bat(script: 'cd playwright && npx playwright test --reporter=html', returnStatus: true)
+                        }
+                        if (status != 0) {
+                            echo "Tests failed, but continuing to generate reports..."
+                        }
                     }
                 }
             }
