@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    tools {
-        nodejs "node16"   // configure NodeJS in Jenkins Global Tool Configuration
-    }
 
     stages {
         stage('Install Dependencies') {
@@ -48,8 +45,6 @@ pipeline {
                 allowMissing: true,
                 linkRelative: false
             ])
-
-            // Archive raw artifacts (screenshots, test results)
             archiveArtifacts artifacts: 'Screenshots/**, test-results/**', allowEmptyArchive: true
         }
     }
