@@ -1,32 +1,29 @@
 pipeline {
     agent any
-    tools {
-        nodejs "node16"   // must match the name you set in Jenkins
-    }
 
-    stage('Install Dependencies') {
-        steps {
-            script {
-                if (isUnix()) {
-                    sh 'cd playwright && npm install'
-                    sh 'cd playwright && npx playwright install'
-                } else {
-                    bat 'cd playwright && npm install'
-                    bat 'cd playwright && npx playwright install'
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh 'cd playwright && npm install'
+                        sh 'cd playwright && npx playwright install'
+                    } else {
+                        bat 'cd playwright && npm install'
+                        bat 'cd playwright && npx playwright install'
+                    }
                 }
             }
         }
-    }
-
 
         stage('Run Tests') {
             steps {
                 script {
                     def status
                     if (isUnix()) {
-                        status = sh(script: 'npx playwright test --reporter=html', returnStatus: true)
+                        status = sh(script: 'cd playwright && npx playwright test --reporter=html', returnStatus: true)
                     } else {
-                        status = bat(script: 'npx playwright test --reporter=html', returnStatus: true)
+                        status = bat(script: 'cd playwright && npx playwright test --reporter=html', returnStatus: true)
                     }
                     if (status != 0) {
                         echo "Tests failed, but continuing to generate reports..."
@@ -40,14 +37,14 @@ pipeline {
         always {
             echo 'Generating HTML reports...'
             publishHTML(target: [
-                reportDir: 'playwright-report',
+                reportDir: 'playwright/playwright-report',
                 reportFiles: 'index.html',
                 reportName: 'Playwright HTML Report',
                 alwaysLinkToLastBuild: true,
                 keepAll: true,
                 allowMissing: true
             ])
-            archiveArtifacts artifacts: 'Screenshots/**, test-results/**', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'playwright/Screenshots/**, playwright/test-results/**', allowEmptyArchive: true
         }
     }
 }
