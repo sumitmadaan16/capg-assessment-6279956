@@ -36,16 +36,16 @@ pipeline {
     post {
         always {
             echo 'Generating HTML reports...'
-            publishHTML(target: [
-                reportDir: 'playwright-report',
-                reportFiles: 'index.html',
-                reportName: 'Playwright HTML Report',
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                allowMissing: true,
-                linkRelative: false
-            ])
-            archiveArtifacts artifacts: 'Screenshots/**, test-results/**', allowEmptyArchive: true
+//             publishHTML(target: [
+//                 reportDir: 'playwright-report',
+//                 reportFiles: 'index.html',
+//                 reportName: 'Playwright HTML Report',
+//                 alwaysLinkToLastBuild: true,
+//                 keepAll: true,
+//                 allowMissing: true,
+//                 linkRelative: false
+//             ])
+//             archiveArtifacts artifacts: 'Screenshots/**, test-results/**', allowEmptyArchive: true
         }
     }
 }
