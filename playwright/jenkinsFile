@@ -4,20 +4,20 @@ pipeline {
         nodejs "node16"   // must match the name you set in Jenkins
     }
 
-    stages {
-        stage('Install Dependencies') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh 'npm install'
-                        sh 'npx playwright install'
-                    } else {
-                        bat 'npm install'
-                        bat 'npx playwright install'
-                    }
+    stage('Install Dependencies') {
+        steps {
+            script {
+                if (isUnix()) {
+                    sh 'cd playwright && npm install'
+                    sh 'cd playwright && npx playwright install'
+                } else {
+                    bat 'cd playwright && npm install'
+                    bat 'cd playwright && npx playwright install'
                 }
             }
         }
+    }
+
 
         stage('Run Tests') {
             steps {
